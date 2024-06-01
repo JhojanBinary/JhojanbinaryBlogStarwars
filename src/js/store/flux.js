@@ -12,7 +12,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			favoritos: [], //Array para almacenar los favoritos
+			likes: 0 //Contador de likes
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -35,9 +37,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return elm;
 				});
 
-				//reset the global store
 				setStore({ demo: demo });
+			},
+			//agregar un favorito
+			addFavorite: item => {
+				const store = getStore();
+
+				if (!store.favoritos.includes(item)) {
+
+					setStore({
+						favoritos: [...store.favoritos, item],
+					});
+	
+					setStore({
+						likes: store.likes + 1
+					});
+
+				}
+			},
+			removeFavorite: item => {
+				const store = getStore();
+				const index = store.favoritos.indexOf(item);
+				if (index > -1) {
+				
+					const updatedFavorites = [
+						...store.favoritos.slice(0, index), 
+						...store.favoritos.slice(index + 1) 
+					];
+					setStore({ favoritos: updatedFavorites });
+					setStore({
+						likes: store.likes - 1
+					});
+
+				}
 			}
+
+		
 		}
 	};
 };
